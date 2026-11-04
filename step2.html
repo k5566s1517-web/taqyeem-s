@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>كشف العقارات - تقييم عقاري</title>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Arial, sans-serif; }
+        body { background: #f0f2f5; min-height: 100vh; padding: 20px 10px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 500px; }
+        
+        .header { background: #1f3a5f; color: white; padding: 25px 20px; text-align: center; border-radius: 15px 15px 0 0; }
+        .header h1 { font-size: 30px; margin-bottom: 10px; font-weight: bold; } /* تكبير عنوان الصفحة */
+        .header p { font-size: 17px; opacity: 0.9; }
+
+        .summary-bar { background: #c8912a; color: white; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
+        .summary-bar span:first-child { font-size: 18px; }
+        .summary-bar span:last-child { font-size: 24px; } /* تكبير إجمالي الأتعاب */
+
+        .content { background: white; padding: 20px; border-radius: 0 0 15px 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+
+        .property-card { border: 1px solid #dcdde1; border-radius: 10px; margin-bottom: 20px; overflow: hidden; background: #fafbfc; }
+        .property-header { background: #1f3a5f; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 18px; } /* تكبير رأس الكرت */
+        .property-header .badge { background: #c8912a; padding: 4px 14px; border-radius: 12px; font-size: 16px; }
+        
+        .property-body { padding: 18px; }
+        .property-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #e2e8f0; font-size: 18px; color: #4a5568; } /* تكبير النصوص */
+        .property-row:last-child { border-bottom: none; }
+        .property-row span:first-child { font-weight: bold; color: #1f3a5f; }
+        
+        .property-fee { color: #1e9e5a; font-weight: bold; font-size: 24px; text-align: left; margin-top: 15px; padding-top: 10px; border-top: 1px solid #e2e8f0; } /* تكبير خط الأتعاب */
+
+        .empty-state { text-align: center; color: #95a5a6; padding: 40px 20px; font-size: 20px; font-weight: bold; }
+
+        .btn-group { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
+        .btn { width: 100%; padding: 20px; border: none; border-radius: 12px; font-size: 20px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; display: block; } /* تكبير الأزرار */
+        .btn-add { background: #ecf0f1; color: #1f3a5f; border: 2px dashed #bdc3c7; }
+        .btn-add:hover { background: #e0e6e8; }
+        .btn-confirm { background: #1e9e5a; color: white; box-shadow: 0 4px 10px rgba(30, 158, 90, 0.3); }
+        .btn-confirm:hover { background: #178a4c; }
+        
+        .card-actions { display: flex; gap: 12px; margin-top: 20px; }
+        .btn-small { flex: 1; padding: 14px; border-radius: 8px; font-size: 18px; cursor: pointer; text-align: center; border: none; font-weight: bold; } /* تكبير أزرار تعديل وحذف */
+        .btn-edit { background: #3498db; color: white; }
+        .btn-delete { background: #e74c3c; color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>كشف العقارات</h1>
+            <p>مراجعة العقارات المسجلة قبل إصدار التقرير</p>
+        </div>
+
+        <div class="summary-bar">
+            <span>إجمالي الأتعاب:</span>
+            <span id="totalFeeDisplay">0 ريال</span>
+        </div>
+
+        <div class="content">
+            <div id="propertiesList">
+                <!-- سيتم تعبئة العقارات هنا -->
+            </div>
+
+            <div class="btn-group">
+                <button onclick="addNewProperty()" class="btn btn-add">+ إضافة عقار آخر</button>
+                <button onclick="confirmRequest()" class="btn btn-confirm">✅ تأكيد الطلب وإصدار التقرير</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const requestData = JSON.parse(localStorage.getItem('requestData')) || { propertyCount: 1 };
+            const totalProps = parseInt(requestData.propertyCount) || 1;
+            
+            const listContainer = document.getElementById('propertiesList');
+            let totalFee = 0;
+            let foundAny = false;
+
+            for(let i = 1; i <= totalProps; i++) {
+                const prop = JSON.parse(localStorage.getItem(`property${i}`));
+                
+                if(prop && prop.propertyType) {
+                    foundAny = true;
+                    const feeString = prop.fee || '0';
+                    const feeValue = parseFloat(feeString.replace(/[^0-9.]/g, '')) || 0;
+                    totalFee += feeValue;
+
+                    listContainer.innerHTML += `
+                        <div class="property-card">
+                            <div class="property-header">
+                                <span class="badge">العقار ${i}</span>
+                                <span>${prop.city || '-'} - ${prop.district || '-'}</span>
+                            </div>
+                            <div class="property-body">
+                                <div class="property-row"><span>نوع العقار:</span> <span>${prop.propertyType || '-'}</span></div>
+                                <div class="property-row"><span>المساحة:</span> <span>${prop.area || '-'} م²</span></div>
+                                <div class="property-row"><span>نوع الطلب:</span> <span>${prop.requestType || '-'}</span></div>
+                                <div class="property-fee">${prop.fee || '0 ريال'}</div>
+                                
+                                <div class="card-actions">
+                                    <button class="btn-small btn-edit" onclick="editProperty(${i})">تعديل</button>
+                                    <button class="btn-small btn-delete" onclick="deleteProperty(${i})">حذف</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            if(!foundAny) {
+                listContainer.innerHTML = `<div class="empty-state">لا توجد عقارات مسجلة حتى الآن.<br>يرجى إضافة عقار أولاً.</div>`;
+            }
+
+            document.getElementById('totalFeeDisplay').innerText = totalFee.toLocaleString('ar-SA') + ' ريال';
+        };
+
+        function addNewProperty() {
+            let requestData = JSON.parse(localStorage.getItem('requestData')) || { propertyCount: 1 };
+            let nextIndex = requestData.propertyCount + 1;
+            
+            requestData.propertyCount = nextIndex;
+            localStorage.setItem('requestData', JSON.stringify(requestData));
+            localStorage.setItem('currentPropertyIndex', nextIndex);
+            
+            window.location.href = 'step1.html';
+        }
+
+        function editProperty(index) {
+            localStorage.setItem('currentPropertyIndex', index);
+            window.location.href = 'step1.html';
+        }
+
+        function deleteProperty(index) {
+            if(confirm(`هل أنت متأكد من حذف العقار رقم ${index}؟`)) {
+                localStorage.removeItem(`property${index}`);
+                window.location.reload();
+            }
+        }
+
+        function confirmRequest() {
+            alert('تم تأكيد الطلب بنجاح! سيتم إرسال البيانات إلى فريق التقييم.');
+        }
+    </script>
+</body>
+</html>

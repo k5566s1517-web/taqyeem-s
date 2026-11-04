@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>استمارة طلب تقييم عقاري - جوال</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+        }
+        
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: 10px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            overflow: hidden;
+            animation: slideUp 0.4s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .header {
+            background: #2d3e50;
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        
+        .form-content {
+            padding: 25px 20px;
+        }
+        
+        .progress-section {
+            margin-bottom: 20px;
+        }
+        
+        .progress-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+        
+        .progress-percent {
+            font-weight: bold;
+            color: #2d3e50;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #2d3e50;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+        
+        hr {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 20px 0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #34495e;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .required-star {
+            color: #e74c3c;
+            margin-right: 3px;
+            font-size: 14px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 15px 16px;
+            border: 1.5px solid #dcdde1;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: #fafafa;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232d3e50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: left 16px center;
+            background-size: 16px;
+            padding-left: 45px;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2d3e50;
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(45, 62, 80, 0.1);
+        }
+        
+        input.error, select.error {
+            border-color: #e74c3c;
+            background-color: #fff5f5;
+        }
+        
+        .note {
+            color: #95a5a6;
+            font-size: 12px;
+            margin-top: 6px;
+            margin-right: 5px;
+        }
+        
+        .warning-message {
+            background-color: #fef3c7;
+            border-right: 4px solid #f59e0b;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+            color: #92400e;
+            display: none;
+        }
+        
+        .warning-message.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 16px 0;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .btn:active {
+            transform: scale(0.97);
+        }
+        
+        .btn-primary {
+            background: #2d3e50;
+            color: white;
+            box-shadow: 0 4px 10px rgba(45, 62, 80, 0.3);
+        }
+        
+        .btn-primary:active {
+            background: #1e2b38;
+        }
+        
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #7f8c8d;
+            border: 1px solid #dcdde1;
+        }
+        
+        .btn-secondary:active {
+            background: #e0e6e8;
+        }
+        
+        input[type="tel"] {
+            direction: ltr;
+            text-align: right;
+        }
+        
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        
+        .custom-alert {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            z-index: 1000;
+            animation: slideUpAlert 0.3s;
+            border-right: 5px solid #2d3e50;
+        }
+        
+        @keyframes slideUpAlert {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .alert-success {
+            border-right-color: #2ecc71;
+        }
+        
+        .alert-error {
+            border-right-color: #e74c3c;
+        }
+        
+        .alert-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .alert-message {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 350px) {
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .btn {
+                padding: 14px 0;
+                font-size: 15px;
+            }
+            
+            .form-content {
+                padding: 20px 15px;
+            }
+        }
+        
+        @media (max-width: 320px) {
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .container {
+                margin: 5px;
+            }
+        }
+        
+        /* تنسيق مجموعات الاختيار - لون غامق جداً للعناوين */
+        optgroup {
+            font-weight: 900;  /* زيادة سمك الخط */
+            color: #000000;  /* لون أسود غامق */
+            background-color: #f0f2f5;  /* خلفية رمادية فاتحة */
+            font-size: 15px;
+            padding: 12px 0 8px 0;  /* زيادة المسافات */
+            border-top: 2px solid #2d3e50;  /* خط علوي بلون الهيدر */
+            border-bottom: 1px solid #cbd5e0;  /* خط سفلي خفيف */
+            margin: 8px 0 4px 0;
+            letter-spacing: 0.3px;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.1);  /* ظل خفيف للنص */
+        }
+        
+        /* إزالة الخط العلوي من أول مجموعة */
+        optgroup:first-of-type {
+            border-top: none;
+        }
+        
+        /* إزالة الخط السفلي من آخر مجموعة */
+        optgroup:last-of-type {
+            border-bottom: 2px solid #2d3e50;  /* خط سفلي غامق لآخر مجموعة */
+        }
+        
+        option {
+            color: #1e293b;
+            background-color: white;
+            font-weight: normal;
+            padding: 10px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        option:last-of-type {
+            border-bottom: none;
+        }
+        
+        option:hover {
+            background-color: #e6f7ff;
+        }
+        
+        /* تنسيق خاص لخيار "أكثر" */
+        option[value="more"] {
+            color: #e67e22;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>استمارة طلب تقييم</h1>
+            <p>الرجاء تعبئة البيانات الأساسية</p>
+        </div>
+        
+        <div class="form-content">
+            <div class="progress-section">
+                <div class="progress-status">
+                    <span>اكتمال البيانات</span>
+                    <span class="progress-percent" id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            
+            <hr>
+            
+            <form id="requestForm">
+                <!-- 1. اسم طالب التقييم -->
+                <div class="form-group">
+                    <label for="applicantName">
+                        اسم طالب التقييم
+                        <span class="required-star">*</span>
+                    </label>
+                    <input type="text" id="applicantName" placeholder="مثال: محمد أحمد" required>
+                </div>
+                
+                <!-- 2. رقم الجوال -->
+                <div class="form-group">
+                    <label for="phoneNumber">
+                        رقم الجوال
+                        <span class="required-star">*</span>
+                    </label>
+                    <input type="tel" id="phoneNumber" placeholder="05xxxxxxxx" inputmode="numeric" required>
+                    <div class="note">أدخل 10 أرقام</div>
+                </div>
+                
+                <!-- 3. عدد العقارات (1-5 + أكثر) -->
+                <div class="form-group">
+                    <label for="propertyCount">
+                        عدد العقارات
+                        <span class="required-star">*</span>
+                    </label>
+                    <select id="propertyCount" required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="more">أكثر</option>
+                    </select>
+                    <div class="note">اختر "أكثر" إذا كان العدد أكبر من 5</div>
+                </div>
+                
+                <!-- رسالة تحذيرية لعدد العقارات -->
+                <div class="warning-message" id="propertyCountWarning">
+                    ⚠️ تنبيه: عدد العقارات أكثر من 5. سيتم التواصل معكم لتقديم عرض خاص.
+                </div>
+                
+                <!-- 4. الغرض من التقييم -->
+                <div class="form-group">
+                    <label for="evaluationPurpose">
+                        الغرض من التقييم
+                        <span class="required-star">*</span>
+                    </label>
+                    <select id="evaluationPurpose" required>
+                        <option value="" disabled selected>اختر الغرض من التقييم</option>
+                        
+                        <optgroup label="المعاملات التجارية">
+                            <option value="تحديد سعر البيع">تحديد سعر البيع</option>
+                            <option value="تحديد سعر الشراء">تحديد سعر الشراء</option>
+                            <option value="تقدير القيمة الإيجارية">تقدير القيمة الإيجارية</option>
+                            <option value="تقييم الأصول لأغراض الاندماج والاستحواذ">تقييم الأصول (الاندماج والاستحواذ)</option>
+                            <option value="تقدير قيمة الحصص العينية في الشركات">تقدير قيمة الحصص العينية</option>
+                        </optgroup>
+                        
+                        <optgroup label="المعاملات الاستثمارية">
+                            <option value="تحليل استثمار الأرض ( لمشروع واحد )">تحليل استثمار الأرض (مشروع واحد)</option>
+                            <option value="تحليل استثمار الأرض ( لأفضل مشروع )">تحليل استثمار الأرض (أفضل مشروع)</option>
+                            <option value="تحليل استثمار الأرض ( لعدة مشاريع )">تحليل استثمار الأرض (عدة مشاريع)</option>
+                            <option value="تقدير القيمة المتبقية للأرض">تقدير القيمة المتبقية للأرض</option>
+                            <option value="تقييم حق المنفعة للمدة المتبقية">تقييم حق المنفعة</option>
+                        </optgroup>
+                        
+                        <optgroup label="التمويل والرهن والائتمان">
+                            <option value="تقييم الوضع الراهن للعقار المتضرر">تقييم عقار متضرر</option>
+                            <option value="إصدار القروض بضمان عقاري">إصدار قروض بضمان عقاري</option>
+                            <option value="إعادة تمويل العقارات القائمة">إعادة تمويل عقاري</option>
+                            <option value="تقدير قيمة العقار لأغراض الرهن العقاري">تقدير قيمة للرهن العقاري</option>
+                            <option value="تحديد سقف الائتمان البنكي">تحديد سقف الائتمان</option>
+                            <option value="تقييم الأصول في حالات التعثر المالي">تقييم في حالات التعثر</option>
+                        </optgroup>
+                        
+                        <optgroup label="توزيع الميراث">
+                            <option value="توزيع تركة">توزيع تركة</option>
+                            <option value="بيع لصالح القاصر">بيع لصالح قاصر</option>
+                            <option value="شراء لصالح القاصر">شراء لصالح قاصر</option>
+                            <option value="بيع حصة أحد الورثة">بيع حصة وارث</option>
+                            <option value="شراء حصة أحد الورثة">شراء حصة وارث</option>
+                        </optgroup>
+                        
+                        <optgroup label="القضاء والنزاعات القانونية">
+                            <option value="تعويضات حكومية">تعويضات حكومية</option>
+                            <option value="تقدير إيجار أثر رجعي ( القيمة بالمثل )">تقدير إيجار أثر رجعي</option>
+                            <option value="رسوم الأراضي البيضاء">رسوم الأراضي البيضاء</option>
+                            <option value="تقييم الجزء المستقطع لصالح الشارع العام">تقييم جزء مستقطع لشارع</option>
+                            <option value="تقييم العقار ( قبل وبعد ) النزع الجزئي للمنفعة العامة">تقييم قبل وبعد النزع</option>
+                        </optgroup>
+                        
+                        <optgroup label="لأغراض محاسبية">
+                            <option value="تقدير مباني">تقدير مباني</option>
+                            <option value="تقدير أرض">تقدير أرض</option>
+                            <option value="تقدير أرض ومباني">تقدير أرض ومباني</option>
+                            <option value="تقدير العقارات ثابتة والمتنقلة">تقدير عقارات (ثابتة ومتنقلة)</option>
+                            <option value="تقسيم الأصول">تقسيم الأصول</option>
+                            <option value="تحديد قيمة الزكاة">تحديد قيمة الزكاة</option>
+                            <option value="إعداد الميزانيات العمومية">إعداد ميزانيات عمومية</option>
+                            <option value="تحديد القيمة العادلة للأصول المستأجرة">القيمة العادلة للأصول المستأجرة</option>
+                            <option value="استحواذ على جزء مجاور لدمجه مع العقار الأصلي">استحواذ على جزء مجاور</option>
+                            <option value="تقييم الجزء المراد استقطاعه من العقار">تقييم الجزء المستقطع</option>
+                        </optgroup>
+                        
+                        <optgroup label="تطوير عقاري والمشاريع">
+                            <option value="تقييم الأرض ( خام ) قبل التطوير">تقييم أرض خام قبل التطوير</option>
+                            <option value="تقييم الأرض ( خام ) بعد التطوير">تقييم أرض خام بعد التطوير</option>
+                            <option value="تقدير تكلفة إعادة البناء أو الاستبدال">تقدير تكلفة إعادة البناء</option>
+                            <option value="تقدير الإيرادات المتوقعة لكل وحدة">تقدير الإيرادات المتوقعة</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <!-- 5. الجهة الرسمية -->
+                <!-- 5. الجهة الرسمية -->
+<div class="form-group">
+    <label for="officialEntity">
+        الجهة الرسمية
+        <span class="required-star">*</span>
+    </label>
+    <select id="officialEntity" required>
+        <option value="" disabled selected>اختر الجهة الرسمية</option>
+
+        <optgroup label="القطاع المالي والتمويلي">
+            <option value="بنك">بنك</option>
+            <option value="شركة تمويل">شركة تمويل</option>
+            <option value="شركة تأمين">شركة تأمين</option>
+            <option value="صندوق استثمار">صندوق استثمار</option>
+        </optgroup>
+
+        <optgroup label="القطاع القضائي والحكومي">
+            <option value="محكمة">محكمة</option>
+            <option value="ورثة">ورثة</option>
+            <option value="جهة حكومية">جهة حكومية</option>
+            <option value="أوقاف">أوقاف</option>
+            <option value="جمعية">جمعية</option>
+        </optgroup>
+
+        <optgroup label="القطاع التجاري والاستثماري">
+            <option value="شركة تطوير عقاري">شركات تطوير</option>
+            <option value="شركة أجنبية">شركة أجنبية</option>
+            <option value="مستثمر">مستثمر</option>
+            <option value="مشتري">مشتري</option>
+        </optgroup>
+
+        <optgroup label="القطاع المهني والأفراد">
+            <option value="محاسب قانوني">محاسب قانوني</option>
+            <option value="شخصي">شخصي</option>
+        </optgroup>
+    </select>
+</div>
+                
+                <!-- 6. اسم الوسيط (اختياري) -->
+                <div class="form-group">
+                    <label for="brokerName">
+                        اسم الوسيط (اختياري)
+                    </label>
+                    <input type="text" id="brokerName" placeholder="إذا كان هناك وسيط">
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">التالي</button>
+                    <button type="reset" class="btn btn-secondary">إعادة</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="alertContainer"></div>
+
+    <script>
+        const form = document.getElementById('requestForm');
+        const textInputs = form.querySelectorAll('input[required]'); // الحقول النصية المطلوبة
+        const propertyCountSelect = document.getElementById('propertyCount');
+        const propertyCountWarning = document.getElementById('propertyCountWarning');
+        const evaluationPurpose = document.getElementById('evaluationPurpose');
+        const progressFill = document.getElementById('progressFill');
+        const progressPercent = document.getElementById('progressPercent');
+        
+        // تحديث شريط التقدم
+        function updateProgress() {
+            let filled = 0;
+            let totalFields = 0;
+            
+            // الحقول النصية المطلوبة (اسم طالب التقييم، رقم الجوال، الجهة الرسمية)
+            textInputs.forEach(input => {
+                totalFields++;
+                if (input.value.trim() !== '') {
+                    filled++;
+                }
+            });
+            
+            // حقل عدد العقارات
+            totalFields++;
+            if (propertyCountSelect.value) filled++;
+            
+            // حقل الغرض من التقييم
+            totalFields++;
+            if (evaluationPurpose.value) filled++;
+            
+            const percentage = Math.round((filled / totalFields) * 100);
+            progressFill.style.width = percentage + '%';
+            progressPercent.textContent = percentage + '%';
+        }
+        
+        textInputs.forEach(input => {
+            input.addEventListener('input', updateProgress);
+        });
+        
+        propertyCountSelect.addEventListener('change', function() {
+            updateProgress();
+            
+            // إظهار رسالة تحذير إذا اختار "أكثر"
+            if (this.value === 'more') {
+                propertyCountWarning.classList.add('show');
+            } else {
+                propertyCountWarning.classList.remove('show');
+            }
+        });
+        
+        evaluationPurpose.addEventListener('change', updateProgress);
+        
+        // تنسيق رقم الجوال
+        document.getElementById('phoneNumber').addEventListener('input', function(e) {
+            let value = e.target.value;
+            value = value.replace(/[^\d]/g, '');
+            if (value.length > 10) value = value.slice(0, 10);
+            e.target.value = value;
+        });
+        
+        function showAlert(message, type = 'error') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `custom-alert ${type === 'success' ? 'alert-success' : 'alert-error'}`;
+            alertDiv.innerHTML = `
+                <div class="alert-title">${type === 'success' ? '✅ تم بنجاح' : '❌ خطأ'}</div>
+                <div class="alert-message">${message}</div>
+            `;
+            
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+        }
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // إزالة الأخطاء السابقة
+            textInputs.forEach(input => {
+                input.classList.remove('error');
+            });
+            propertyCountSelect.classList.remove('error');
+            evaluationPurpose.classList.remove('error');
+            
+            let isValid = true;
+            let firstError = null;
+            
+            // التحقق من الحقول النصية
+            textInputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.classList.add('error');
+                    isValid = false;
+                    if (!firstError) firstError = input;
+                }
+            });
+            
+            // التحقق من عدد العقارات
+            if (!propertyCountSelect.value) {
+                propertyCountSelect.classList.add('error');
+                isValid = false;
+                if (!firstError) firstError = propertyCountSelect;
+            }
+            
+            // التحقق من الغرض من التقييم
+            if (!evaluationPurpose.value) {
+                evaluationPurpose.classList.add('error');
+                isValid = false;
+                if (!firstError) firstError = evaluationPurpose;
+            }
+            
+            // التحقق من رقم الجوال
+            const phoneInput = document.getElementById('phoneNumber');
+            if (phoneInput.value.trim() && phoneInput.value.length !== 10) {
+                phoneInput.classList.add('error');
+                isValid = false;
+                if (!firstError) firstError = phoneInput;
+                showAlert('رقم الجوال يجب أن يكون 10 أرقام');
+            }
+            
+            if (isValid) {
+                let propertyCount = propertyCountSelect.value;
+                
+                // إذا اختار "أكثر"، نضع قيمة افتراضية 6
+                if (propertyCount === 'more') {
+                    propertyCount = '6';
+                }
+                
+                const formData = {
+                    applicantName: document.getElementById('applicantName').value,
+                    phoneNumber: document.getElementById('phoneNumber').value,
+                    propertyCount: propertyCount,
+                    evaluationPurpose: evaluationPurpose.value,
+                    officialEntity: document.getElementById('officialEntity').value,
+                    brokerName: document.getElementById('brokerName').value
+                };
+                
+                localStorage.setItem('requestData', JSON.stringify(formData));
+                
+                showAlert('تم حفظ البيانات بنجاح', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'step1.html';
+                }, 1000);
+            } else {
+                showAlert('❌ الرجاء تعبئة جميع الحقول المطلوبة');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+        
+        form.addEventListener('reset', function() {
+            setTimeout(() => {
+                textInputs.forEach(input => {
+                    input.classList.remove('error');
+                });
+                propertyCountSelect.classList.remove('error');
+                evaluationPurpose.classList.remove('error');
+                propertyCountWarning.classList.remove('show');
+                updateProgress();
+            }, 10);
+        });
+        
+        window.addEventListener('load', updateProgress);
+        
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('touchstart', function() {
+                this.style.fontSize = '16px';
+            });
+        });
+    </script>
+</body>
+</html>
